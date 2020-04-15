@@ -1,0 +1,14 @@
+{application, emqx_plugin_device,
+ [{description, "Device Plugin"},
+  {vsn, "git"},
+  {modules, []},
+  {registered, [emqx_plugin_device_sup]},
+  {applications, [kernel,stdlib]},
+  {mod, {emqx_plugin_device_app,[]}},
+  {env, []},
+  {licenses, ["Apache-2.0"]},
+  {maintainers, ["TianJiCloud Team <thinkport@live.cn>"]},
+  {links, [{"Homepage", "http://www.tianji-cloud.com/"},
+           {"Github", "https://github.com/thinkport/emqx-plugin-device"}
+          ]}
+ ]}.

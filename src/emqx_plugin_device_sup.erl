@@ -14,10 +14,17 @@
 %% limitations under the License.
 %%--------------------------------------------------------------------
 
--module(emqx_plugin_template_SUITE).
+-module(emqx_plugin_device_sup).
 
--compile(export_all).
+-behaviour(supervisor).
 
-all() -> [].
+-export([start_link/0]).
 
-groups() -> [].
+-export([init/1]).
+
+start_link() ->
+    supervisor:start_link({local, ?MODULE}, ?MODULE, []).
+
+init([]) ->
+    {ok, { {one_for_all, 0, 1}, []} }.
+
