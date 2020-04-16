@@ -14,6 +14,7 @@
 
 %% Called when the plugin application start
 load(Env) ->
+	io:format("emqx_plugin_device load"),
     emqx:hook('client.connected',    {?MODULE, on_client_connected, [Env]}),
     emqx:hook('client.disconnected', {?MODULE, on_client_disconnected, [Env]}).
 
@@ -31,6 +32,7 @@ on_client_disconnected(ClientInfo = #{clientid := ClientId}, ReasonCode, ConnInf
 
 %% Called when the plugin application stop
 unload() ->
+	io:format("emqx_plugin_device unload"),
     emqx:unhook('client.connected',    {?MODULE, on_client_connected}),
     emqx:unhook('client.disconnected', {?MODULE, on_client_disconnected}).
 

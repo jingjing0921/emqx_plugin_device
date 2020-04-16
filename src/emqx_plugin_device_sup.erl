@@ -23,8 +23,10 @@
 -export([init/1]).
 
 start_link() ->
+	io:format("emqx_plugin_device start_link"),
     supervisor:start_link({local, ?MODULE}, ?MODULE, []).
 
 init([]) ->
+	io:format("emqx_plugin_device init"),
     {ok, { {one_for_all, 0, 1}, []} }.
 
