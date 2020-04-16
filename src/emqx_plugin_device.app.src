@@ -1,5 +1,5 @@
 {application, emqx_plugin_device,
- [{description, "Device Plugin"},
+ [{description, "Device Plugin v0.0.1"},
   {vsn, "git"},
   {modules, []},
   {registered, [emqx_plugin_device_sup]},
