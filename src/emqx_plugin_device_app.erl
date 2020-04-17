@@ -4,17 +4,18 @@
 
 -emqx_plugin(?MODULE).
 
+-include("emqx_plugin_device.hrl").
+
 -export([ start/2
         , stop/1
         ]).
 
 start(_StartType, _StartArgs) ->
-	io:format("emqx_plugin_device start"),
     {ok, Sup} = emqx_plugin_device_sup:start_link(),
     emqx_plugin_device:load(application:get_all_env()),
     {ok, Sup}.
 
 stop(_State) ->
-	io:format("emqx_plugin_device stop"),
+	eredis_cluster:stop_pool(?APP).
     emqx_plugin_device:unload().
 
