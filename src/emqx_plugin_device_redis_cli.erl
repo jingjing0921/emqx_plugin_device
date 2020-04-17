@@ -18,7 +18,7 @@
 
 -behaviour(ecpool_worker).
 
-%%-include("emqx_auth_redis.hrl").
+-include("emqx_plugin_device.hrl").
 
 -include_lib("emqx/include/emqx.hrl").
 -include_lib("emqx/include/logger.hrl").
