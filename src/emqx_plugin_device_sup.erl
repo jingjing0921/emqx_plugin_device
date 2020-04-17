@@ -32,11 +32,12 @@ init([]) ->
     {ok, {{one_for_one, 10, 100}, pool_spec(Server)}}.
 	
 pool_spec(Server) ->
-    case proplists:get_value(type, Server) of
-        cluster ->
-            eredis_cluster:start_pool(?APP, Server),
-            [];
-        _ ->
-            [ecpool:pool_spec(?APP, ?APP, emqx_plugin_device_cli, Server)]
-    end.
+	ok.
+%%    case proplists:get_value(type, Server) of
+%%        cluster ->
+%%           eredis_cluster:start_pool(?APP, Server),
+%%            [];
+%%        _ ->
+%%            [ecpool:pool_spec(?APP, ?APP, emqx_plugin_device_cli, Server)]
+%%    end.
 
