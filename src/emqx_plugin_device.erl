@@ -14,7 +14,6 @@
 
 %% Called when the plugin application start
 load(Env) ->
-	io:format("emqx_plugin_device load"),
     emqx:hook('client.connected',    {?MODULE, on_client_connected, [Env]}),
     emqx:hook('client.disconnected', {?MODULE, on_client_disconnected, [Env]}).
 
@@ -25,15 +24,16 @@ load(Env) ->
 on_client_connected(ClientInfo = #{clientid := ClientId}, ConnInfo, _Env) ->
     io:format("emqx_plugin_device Client(~s) connected, ClientInfo:~n~p~n, ConnInfo:~n~p~n",
               [ClientId, ClientInfo, ConnInfo]),
-	emqx_plugin_device_redis_cli:q(["SET", ClientId, "online"], 1000).
+	emqx_plugin_device_redis_cli:q(["SET", ClientId, "online"], 1000),
+	ok.
 
 on_client_disconnected(ClientInfo = #{clientid := ClientId}, ReasonCode, ConnInfo, _Env) ->
     io:format("emqx_plugin_device Client(~s) disconnected due to ~p, ClientInfo:~n~p~n, ConnInfo:~n~p~n",
               [ClientId, ReasonCode, ClientInfo, ConnInfo]),
-	emqx_plugin_device_redis_cli:q(["SET", ClientId, "offline"], 1000).
+	emqx_plugin_device_redis_cli:q(["SET", ClientId, "offline"], 1000),
+	ok.
 
 %% Called when the plugin application stop
 unload() ->
-	io:format("emqx_plugin_device unload"),
     emqx:unhook('client.connected',    {?MODULE, on_client_connected}),
     emqx:unhook('client.disconnected', {?MODULE, on_client_disconnected}).
