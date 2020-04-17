@@ -16,6 +16,6 @@ start(_StartType, _StartArgs) ->
     {ok, Sup}.
 
 stop(_State) ->
-	eredis_cluster:stop_pool(?APP).
+	eredis_cluster:stop_pool(?APP),
     emqx_plugin_device:unload().
 
