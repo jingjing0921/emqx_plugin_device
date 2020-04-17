@@ -34,6 +34,7 @@
 %%--------------------------------------------------------------------
 
 connect(Opts) ->
+	io:format("connect Opts ~p~n", [opts]),
     Sentinel = get_value(sentinel, Opts),
     Host = case Sentinel =:= "" of
         true -> get_value(host, Opts);
