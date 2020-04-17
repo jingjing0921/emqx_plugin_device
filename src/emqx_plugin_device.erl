@@ -35,4 +35,3 @@ unload() ->
 	io:format("emqx_plugin_device unload"),
     emqx:unhook('client.connected',    {?MODULE, on_client_connected}),
     emqx:unhook('client.disconnected', {?MODULE, on_client_disconnected}).
-
