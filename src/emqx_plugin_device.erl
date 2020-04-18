@@ -23,13 +23,13 @@ load(Env) ->
 
 on_client_connected(ClientInfo = #{clientid := ClientId}, ConnInfo, _Env) ->
     io:format("emqx_plugin_device Client(~s) connected, ClientInfo:~n~p~n, ConnInfo:~n~p~n",
-              [ClientId, ClientInfo, ConnInfo]),
-	emqx_plugin_device_redis_cli:q(["SET", ClientId, "online"], 1000).
+              [ClientId, ClientInfo, ConnInfo]).
+	emqx_plugin_device_redis_cli:q(["SET", "device:" ++ ClientId, "online"], 1000).
 
 on_client_disconnected(ClientInfo = #{clientid := ClientId}, ReasonCode, ConnInfo, _Env) ->
     io:format("emqx_plugin_device Client(~s) disconnected due to ~p, ClientInfo:~n~p~n, ConnInfo:~n~p~n",
-              [ClientId, ReasonCode, ClientInfo, ConnInfo]),
-	emqx_plugin_device_redis_cli:q(["SET", ClientId, "offline"], 1000).
+              [ClientId, ReasonCode, ClientInfo, ConnInfo]).
+	emqx_plugin_device_redis_cli:q(["SET", "device:" ++ ClientId, "offline"], 1000).
 
 %% Called when the plugin application stop
 unload() ->
