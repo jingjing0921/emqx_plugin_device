@@ -1,5 +1,7 @@
 -module(emqx_plugin_device).
 
+-include("emqx_plugin_device.hrl").
+
 -include_lib("emqx/include/emqx.hrl").
 
 -export([ load/1
