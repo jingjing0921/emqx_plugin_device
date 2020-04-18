@@ -23,19 +23,19 @@ load(Env) ->
 %% Client Lifecircle Hooks
 %%--------------------------------------------------------------------
 
-on_client_connected(ClientInfo, ConnInfo = #{username := UserName, peername := PeerName, proto_name := Protocol}, _Env) ->
+on_client_connected(ClientInfo, ConnInfo = #{username := UserName, peername := PeerName, proto_name := Protocol}, _Env = #{query_timeout := Timeout}) ->
 	Key = "device:" ++ UserName,
 	{{A1, A2, A3, A4}, Port} = PeerName,
 	IP = lists:flatten(io_lib:format("~w.~w.~w.~w", [A1, A2, A3, A4])),
 	{{Year, Month, Day}, {Hour, Minute, Second}} = calendar:local_time(),
 	Time = lists:flatten(io_lib:format("~w-~w-~w ~w:~w:~w", [Year, Month, Day, Hour, Minute, Second])),
 	Hash = ["online", "true", "ip", IP, "protocol", Protocol, "time", Time],
-	{ok, Timeout} = application:get_env(?APP, query_timeout),
+	io:format("timeout ~w", Timeout),
 	emqx_plugin_device_redis_cli:q(["HMSET", Key | Hash], Timeout).
 
-on_client_disconnected(ClientInfo, ReasonCode, ConnInfo = #{username := UserName}, _Env) ->
+on_client_disconnected(ClientInfo, ReasonCode, ConnInfo = #{username := UserName}, _Env = #{query_timeout := Timeout}) ->
 	Key = "device:" ++ UserName,
-	{ok, Timeout} = application:get_env(?APP, query_timeout),
+
 	emqx_plugin_device_redis_cli:q(["DEL", Key], Timeout).
 
 %% Called when the plugin application stop
