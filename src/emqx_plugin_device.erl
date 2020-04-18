@@ -30,7 +30,8 @@ on_client_connected(ClientInfo, ConnInfo = #{username := UserName, peername := P
 	{{Year, Month, Day}, {Hour, Minute, Second}} = calendar:local_time(),
 	Time = lists:flatten(io_lib:format("~w-~w-~w ~w:~w:~w", [Year, Month, Day, Hour, Minute, Second])),
 	Hash = ["online", "true", "ip", IP, "protocol", Protocol, "time", Time],
-	%%Timeout = application:get_env(?APP, query_timeout),
+	Timeout = application:get_env(?APP, query_timeout),
+	io:format("Timeout ~p~n", [Timeout]),
 	emqx_plugin_device_redis_cli:q(["HMSET", Key | Hash], 1000).
 
 on_client_disconnected(ClientInfo, ReasonCode, ConnInfo = #{username := UserName}, _Env) ->
