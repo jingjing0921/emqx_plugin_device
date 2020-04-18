@@ -30,13 +30,13 @@ on_client_connected(ClientInfo, ConnInfo = #{username := UserName, peername := P
 	{{Year, Month, Day}, {Hour, Minute, Second}} = calendar:local_time(),
 	Time = lists:flatten(io_lib:format("~w-~w-~w ~w:~w:~w", [Year, Month, Day, Hour, Minute, Second])),
 	Hash = ["online", "true", "ip", IP, "protocol", Protocol, "time", Time],
-	Timeout = application:get_env(?APP, query_timeout),
-	emqx_plugin_device_redis_cli:q(["HMSET", Key | Hash], Timeout).
+	%%Timeout = application:get_env(?APP, query_timeout),
+	emqx_plugin_device_redis_cli:q(["HMSET", Key | Hash], 1000).
 
 on_client_disconnected(ClientInfo, ReasonCode, ConnInfo = #{username := UserName}, _Env) ->
 	Key = "device:" ++ UserName,
-	Timeout = application:get_env(?APP, query_timeout),
-	emqx_plugin_device_redis_cli:q(["DEL", Key], Timeout).
+	%%Timeout = application:get_env(?APP, query_timeout),
+	emqx_plugin_device_redis_cli:q(["DEL", Key], 1000).
 
 %% Called when the plugin application stop
 unload() ->
