@@ -26,8 +26,10 @@ on_client_connected(ClientInfo = #{clientid := ClientId}, ConnInfo = #{username 
               [ClientId, ClientInfo, ConnInfo]),
 	Key = "device:" ++ ClientId,
 	{{A1, A2, A3, A4}, Port} = PeerName,
-	IP = lists:flatten(io_lib:format("~w.~w.~w.~w",[A1, A2, A3, A4])),
-	Hash = ["online", "true", "ip", IP, "protocol", Protocol],
+	IP = lists:flatten(io_lib:format("~w.~w.~w.~w", [A1, A2, A3, A4])),
+	{{Year, Month, Day}, {Hour, Minute, Second}} = calendar:local_time(),
+	Time = lists:flatten(io_lib:format("~w-~w-~w ~w:~w:~w", [Year, Month, Day, Hour, Minute, Second])),
+	Hash = ["online", "true", "ip", IP, "protocol", Protocol, "time", Time],
 	emqx_plugin_device_redis_cli:q(["HMSET", Key | Hash], 1000).
 
 on_client_disconnected(ClientInfo = #{clientid := ClientId}, ReasonCode, ConnInfo, _Env) ->
