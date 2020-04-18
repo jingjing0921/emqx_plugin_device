@@ -49,7 +49,9 @@ connect(Opts) ->
                     get_value(password, Opts),
                     no_reconnect
                 ) of
-            {ok, Pid} -> {ok, Pid};
+            {ok, Pid} -> 
+		io:format("Connect Redis success. ~n"),
+		{ok, Pid};
             {error, Reason = {connection_error, _}} ->
                 ?LOG(error, "[Redis] Can't connect to Redis server: Connection refused."),
                 {error, Reason};
