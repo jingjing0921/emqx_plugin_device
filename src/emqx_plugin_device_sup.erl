@@ -12,13 +12,11 @@ start_link() ->
     supervisor:start_link({local, ?MODULE}, ?MODULE, []).
 
 init([]) ->
-    {ok, { {one_for_all, 0, 1}, []} }.
-%%init([]) ->
-%%    {ok, Server} = application:get_env(?APP, server),
-%%    {ok, {{one_for_one, 10, 100}, pool_spec(Server)}}.
+    {ok, Server} = application:get_env(?APP, server),
+	io:format("Server ~p~n", [Server]),
+    {ok, {{one_for_one, 10, 100}, pool_spec(Server)}}.
 	
 pool_spec(Server) ->
-	io:format("Server ~p~n", [Server]),
     case proplists:get_value(type, Server) of
         cluster ->
            eredis_cluster:start_pool(?APP, Server),
@@ -26,3 +24,4 @@ pool_spec(Server) ->
         _ ->
             [ecpool:pool_spec(?APP, ?APP, emqx_plugin_device_cli, Server)]
     end.
+
