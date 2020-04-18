@@ -25,14 +25,14 @@ on_client_connected(ClientInfo = #{clientid := ClientId}, ConnInfo = #{username 
     io:format("emqx_plugin_device Client(~s) connected, ClientInfo:~n~p~n, ConnInfo:~n~p~n",
               [ClientId, ClientInfo, ConnInfo]),
 	Key = "device:" ++ ClientId,
-	Cmd = [["HSET", Key, "online", "true"], ["HSET", Key, "ip", PeerName], ["HSET", Key, "protocol", Protocol]],
-	emqx_plugin_device_redis_cli:q(Cmd, 1000).
+	Hash = ["online", "true", "ip", PeerName, "protocol", Protocol],
+	emqx_plugin_device_redis_cli:q(["HMSET", key | Hash], 1000).
 
 on_client_disconnected(ClientInfo = #{clientid := ClientId}, ReasonCode, ConnInfo, _Env) ->
     io:format("emqx_plugin_device Client(~s) disconnected due to ~p, ClientInfo:~n~p~n, ConnInfo:~n~p~n",
               [ClientId, ReasonCode, ClientInfo, ConnInfo]),
 	Key = "device:" ++ ClientId,
-	emqx_plugin_device_redis_cli:q(["HSET", key, "online", "false"], 1000).
+	emqx_plugin_device_redis_cli:q(["HSET", key | ["online", "false"]], 1000).
 
 %% Called when the plugin application stop
 unload() ->
