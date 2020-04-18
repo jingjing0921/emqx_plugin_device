@@ -21,22 +21,20 @@ load(Env) ->
 %% Client Lifecircle Hooks
 %%--------------------------------------------------------------------
 
-on_client_connected(ClientInfo = #{clientid := ClientId}, ConnInfo = #{username := UserName, peername := PeerName, proto_name := Protocol}, _Env) ->
-    io:format("emqx_plugin_device Client(~s) connected, ClientInfo:~n~p~n, ConnInfo:~n~p~n",
-              [ClientId, ClientInfo, ConnInfo]),
-	Key = "device:" ++ ClientId,
+on_client_connected(ClientInfo, ConnInfo = #{username := UserName, peername := PeerName, proto_name := Protocol}, _Env) ->
+	Key = "device:" ++ UserName,
 	{{A1, A2, A3, A4}, Port} = PeerName,
 	IP = lists:flatten(io_lib:format("~w.~w.~w.~w", [A1, A2, A3, A4])),
 	{{Year, Month, Day}, {Hour, Minute, Second}} = calendar:local_time(),
 	Time = lists:flatten(io_lib:format("~w-~w-~w ~w:~w:~w", [Year, Month, Day, Hour, Minute, Second])),
 	Hash = ["online", "true", "ip", IP, "protocol", Protocol, "time", Time],
-	emqx_plugin_device_redis_cli:q(["HMSET", Key | Hash], 1000).
+	Timeout = application:get_env(?APP, query_timeout),
+	emqx_plugin_device_redis_cli:q(["HMSET", Key | Hash], Timeout).
 
-on_client_disconnected(ClientInfo = #{clientid := ClientId}, ReasonCode, ConnInfo, _Env) ->
-    io:format("emqx_plugin_device Client(~s) disconnected due to ~p, ClientInfo:~n~p~n, ConnInfo:~n~p~n",
-              [ClientId, ReasonCode, ClientInfo, ConnInfo]),
-	Key = "device:" ++ ClientId,
-	emqx_plugin_device_redis_cli:q(["del", Key], 1000).
+on_client_disconnected(ClientInfo, ReasonCode, ConnInfo = #{username := UserName}, _Env) ->
+	Key = "device:" ++ UserName,
+	Timeout = application:get_env(?APP, query_timeout),
+	emqx_plugin_device_redis_cli:q(["DEL", Key], Timeout).
 
 %% Called when the plugin application stop
 unload() ->
