@@ -12,7 +12,8 @@
 
 start(_StartType, _StartArgs) ->
     {ok, Sup} = emqx_plugin_device_sup:start_link(),
-    emqx_plugin_device:load(application:get_env(?APP, query_timeout)),
+	{ok, Timeout} = application:get_env(?APP, query_timeout),
+    emqx_plugin_device:load(Timeout),
     {ok, Sup}.
 
 stop(_State) ->
