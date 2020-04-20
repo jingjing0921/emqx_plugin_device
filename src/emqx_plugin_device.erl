@@ -33,7 +33,7 @@ on_client_connected(ClientInfo, ConnInfo = #{username := UserName, peername := P
 	io:format("timeout ~w", [_Env]),
 	emqx_plugin_device_redis_cli:q(["HMSET", Key | Hash], 1000).
 
-on_client_disconnected(ClientInfo, ReasonCode, ConnInfo = #{username := UserName}) ->
+on_client_disconnected(ClientInfo, ReasonCode, ConnInfo = #{username := UserName}, _Env) ->
 	Key = "device:" ++ UserName,
 
 	emqx_plugin_device_redis_cli:q(["DEL", Key], 1000).
