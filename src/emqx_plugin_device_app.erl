@@ -13,7 +13,7 @@
 start(_StartType, _StartArgs) ->
     {ok, Sup} = emqx_plugin_device_sup:start_link(),
 	{ok, Timeout} = application:get_env(?APP, query_timeout),
-	[_|{query_timeout, Timeout}|_]application:get_all_env(emqx_plugin_device),
+	[_ | {query_timeout, Timeout} | _] = application:get_all_env(emqx_plugin_device),
 	io:format("~s~n", [Timeout]),
 	
     emqx_plugin_device:load(Timeout),
