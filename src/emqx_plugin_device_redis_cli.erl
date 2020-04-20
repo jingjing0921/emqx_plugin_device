@@ -34,7 +34,6 @@
 %%--------------------------------------------------------------------
 
 connect(Opts) ->
-	io:format("connect Opts ~p~n", [Opts]),
     Sentinel = get_value(sentinel, Opts),
     Host = case Sentinel =:= "" of
         true -> get_value(host, Opts);
@@ -50,7 +49,6 @@ connect(Opts) ->
                     no_reconnect
                 ) of
             {ok, Pid} ->
-				io:format("Connect Redis success. ~n"),
 				{ok, Pid};
             {error, Reason = {connection_error, _}} ->
                 ?LOG(error, "[Redis] Can't connect to Redis server: Connection refused."),
@@ -67,7 +65,7 @@ connect(Opts) ->
 -spec(q(string(), timeout())
       -> {ok, undefined | binary() | list()} | {error, atom() | binary()}).
 q(Cmd, Timeout) ->
-	io:format("Query ~p~n", [Cmd]),
+	io:format("Query ~s~n", [Cmd]),
     case get_value(type, application:get_env(?APP, server, [])) of
         cluster -> eredis_cluster:q(?APP, Cmd);
         _ -> ecpool:with_client(?APP, fun(C) -> eredis:q(C, Cmd, Timeout) end)
