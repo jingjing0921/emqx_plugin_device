@@ -65,7 +65,7 @@ connect(Opts) ->
 -spec(q(string(), timeout())
       -> {ok, undefined | binary() | list()} | {error, atom() | binary()}).
 q(Cmd, Timeout) ->
-	io:format("Query ~s~n", [Cmd]),
+	io:format("Query ~p~n", [Cmd]),
     case get_value(type, application:get_env(?APP, server, [])) of
         cluster -> eredis_cluster:q(?APP, Cmd);
         _ -> ecpool:with_client(?APP, fun(C) -> eredis:q(C, Cmd, Timeout) end)
